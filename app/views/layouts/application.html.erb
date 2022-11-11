@@ -13,6 +13,16 @@
 
     <%= stylesheet_link_tag 'application', media: 'all' %>
 
+    <style>
+      .waiting_on{
+        background-color: lightgoldenrodyellow;
+      }
+
+      .received{
+        background-color: lightgreen;
+      }
+    </style>
+
   </head>
   <% if @current_user == nil %>
   

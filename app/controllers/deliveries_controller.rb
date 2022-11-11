@@ -1,6 +1,6 @@
 class DeliveriesController < ApplicationController
   def index
-    matching_deliveries = Delivery.all
+    matching_deliveries = Delivery.where({:user_id => session.fetch(:user_id)})
 
     @list_of_deliveries = matching_deliveries.order({ :created_at => :desc })
 
@@ -19,7 +19,7 @@ class DeliveriesController < ApplicationController
 
   def create
     the_delivery = Delivery.new
-    the_delivery.user_id = params.fetch("query_user_id")
+    the_delivery.user_id = @current_user.id
     the_delivery.description = params.fetch("query_description")
     the_delivery.details = params.fetch("query_details")
     the_delivery.status = params.fetch("query_status")
@@ -27,9 +27,9 @@ class DeliveriesController < ApplicationController
 
     if the_delivery.valid?
       the_delivery.save
-      redirect_to("/deliveries", { :notice => "Delivery created successfully." })
+      redirect_to("/", { :notice => "Delivery created successfully." })
     else
-      redirect_to("/deliveries", { :alert => the_delivery.errors.full_messages.to_sentence })
+      redirect_to("/", { :alert => the_delivery.errors.full_messages.to_sentence })
     end
   end
 
@@ -37,17 +37,15 @@ class DeliveriesController < ApplicationController
     the_id = params.fetch("path_id")
     the_delivery = Delivery.where({ :id => the_id }).at(0)
 
-    the_delivery.user_id = params.fetch("query_user_id")
-    the_delivery.description = params.fetch("query_description")
-    the_delivery.details = params.fetch("query_details")
+    the_delivery.user_id = @current_user.id
     the_delivery.status = params.fetch("query_status")
-    the_delivery.arriving = params.fetch("query_arriving")
+
 
     if the_delivery.valid?
       the_delivery.save
-      redirect_to("/deliveries/#{the_delivery.id}", { :notice => "Delivery updated successfully."} )
+      redirect_to("/", { :notice => "Delivery updated successfully."} )
     else
-      redirect_to("/deliveries/#{the_delivery.id}", { :alert => the_delivery.errors.full_messages.to_sentence })
+      redirect_to("/", { :alert => the_delivery.errors.full_messages.to_sentence })
     end
   end
 
@@ -57,6 +55,6 @@ class DeliveriesController < ApplicationController
 
     the_delivery.destroy
 
-    redirect_to("/deliveries", { :notice => "Delivery deleted successfully."} )
+    redirect_to("/", { :notice => "Delivery deleted successfully."} )
   end
 end
