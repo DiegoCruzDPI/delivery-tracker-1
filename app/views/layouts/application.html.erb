@@ -24,6 +24,7 @@
     </style>
 
   </head>
+  <div>
   <% if @current_user == nil %>
   
   <a href= "/user_sign_in">Sign in</a>
@@ -36,7 +37,11 @@
   |
   <a href= "/user_sign_out">Sign out</a>
   <% end %>
+</div>
 
+  <div>
+    <%= notice %>
+  </div>
   <body>
     <%= yield %>
   </body>
